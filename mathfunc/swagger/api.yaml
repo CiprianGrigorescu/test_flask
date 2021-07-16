@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: Endava HWork
+  version: 1.0.0
+  description: |
+    An API to solve different mathematical operations:
+    - the pow function
+    - the n-th fibbonaci number
+    - the factorial of the number
+tags:
+  - name: POW
+    description: POW function
+  - name: N-th Fibbonaci
+    description: N-th Fibbonaci function
+  - name: Factorial
+    description: Factorial of a number
+paths:
+  /pow:
+    get:
+      tags:
+        - POW
+      parameters:
+        - name: number
+          required: true
+          in: query
+          allowEmptyValue: false
+          description: Integer number
+          schema:
+            type: integer
+          example: 2
+        - name: power
+          required: true
+          in: query
+          allowEmptyValue: false
+          description: Integer number
+          schema:
+            type: integer
+          example: 3
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-openapi-router-controller: mathfunc.apis.math_pow.views
+      operationId: get_math_pow
+      security:
+        - basic: ['read']
+servers:
+  - url: /
+components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+      x-basicInfoFunc: mathfunc.utils.auth_manager.basic_auth
+  schemas:
+    Success:
+      type: object
+      properties:
+        result:
+          type: integer
+    Error:
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            code:
+              type: integer
+            error_id:
+              type: string
